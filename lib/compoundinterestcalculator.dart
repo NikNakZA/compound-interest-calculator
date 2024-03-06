@@ -5,19 +5,21 @@ class CompoundInterestCalculator {
   double initialAmount;
   double percentageAmount;
   double amountOfYears;
+  bool ifMonths;
 
   CompoundInterestCalculator(
       this.initialAmount,
       this.percentageAmount,
-      this.amountOfYears
+      this.amountOfYears,
+      this.ifMonths,
       );
 
 
   //Calculation method:
 
 
-  List<dynamic>? Calculation () {
-    List<dynamic> accumulatedYearlyInterest = [];
+  List<String> calculation () {
+    List<String> accumulatedYearlyInterest = [];
 
     double multiplier = 1 + (percentageAmount/100);
     double finalAmount = initialAmount;
@@ -36,7 +38,12 @@ class CompoundInterestCalculator {
       String periodInterestFormat = periodInterest.toStringAsFixed(2);
       totalInterestFormat = totalInterest.toStringAsFixed(2);
 
-      accumulatedYearlyInterest.add("Year $i: $finalAmountFormat \n Period interest: $periodInterestFormat\n\n");
+      if (ifMonths == false) {
+        accumulatedYearlyInterest.add(" Year $i: $finalAmountFormat \n Period interest: $periodInterestFormat\n\n");
+      }
+      else {
+        accumulatedYearlyInterest.add(" Month $i: $finalAmountFormat \n Period interest: $periodInterestFormat\n\n");
+      }
     }
 
     accumulatedYearlyInterest.add("Total Interest: $totalInterestFormat");

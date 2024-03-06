@@ -30,6 +30,9 @@ class _CICalculatorState extends State<CICalculator> {
 
   @override
   Widget build(BuildContext context) {
+
+    String ifMonthsText = ifMonths ? "Amount of Months:" : "Amount of Years";
+
     return Scaffold(
       backgroundColor: Colors.grey[200],
       bottomNavigationBar: const BottomAppBar(
@@ -42,6 +45,7 @@ class _CICalculatorState extends State<CICalculator> {
       ),
       appBar: AppBar(
         backgroundColor: Colors.deepOrangeAccent,
+        shadowColor: Colors.black,
         title: const Center(child: Text("Compound Interest Calculator",
         style: TextStyle(color: Colors.white, fontSize: 24),
         )),
@@ -50,7 +54,7 @@ class _CICalculatorState extends State<CICalculator> {
         child: Column(children: [
           const Padding(
             padding: EdgeInsets.fromLTRB(8,40,8,0),
-            child: Text("Initial amount:",
+            child: Text("Initial Investment:",
                 style: TextStyle(fontSize: 22),
               ),
           ),
@@ -59,7 +63,12 @@ class _CICalculatorState extends State<CICalculator> {
             child: TextField(
               controller: _textController,
               textAlign: TextAlign.center,
-              decoration: const InputDecoration(border: OutlineInputBorder()),
+              decoration: InputDecoration(border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(50),
+              ),
+                hintText: "Enter a value", hintStyle: TextStyle(
+                    color: Colors.grey[400], fontSize: 16),
+              ),
               keyboardType: TextInputType.number,
               style: const TextStyle(fontSize: 18, height: 1,
               ),
@@ -67,7 +76,7 @@ class _CICalculatorState extends State<CICalculator> {
           ),
           const Padding(
             padding: EdgeInsets.fromLTRB(8,8,8,0),
-            child: Text("Percentage amount:",
+            child: Text("Interest Rate:",
             style: TextStyle(fontSize: 22),
             ),
           ),
@@ -76,17 +85,45 @@ class _CICalculatorState extends State<CICalculator> {
             child: TextField(
               controller: _textControllerTwo,
               textAlign: TextAlign.center,
-              decoration: const InputDecoration(border: OutlineInputBorder(),
-              hintText: "%"
+              decoration: InputDecoration(border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(50)
+              ),
+              hintText: "Enter a value (%)", hintStyle: TextStyle(
+                    color: Colors.grey[400], fontSize: 16)
               ),
               keyboardType: TextInputType.number,
               style: const TextStyle(fontSize: 18, height: 1),
+
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.fromLTRB(8,8,8,0),
-            child: Text("Amount of years:",
-              style: TextStyle(fontSize: 22),
+
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text("Years"),
+              ),
+                Switch(value: ifMonths, activeColor: Colors.grey,
+                    inactiveThumbColor: Colors.grey,
+                    onChanged: (isOn) {
+                      setState(() {
+                        ifMonths = isOn;
+                      });
+                    }
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text("Months"),
+                ),
+              ],
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8,8,8,0),
+            child: Text("$ifMonthsText:",
+              style: const TextStyle(fontSize: 22),
             ),
           ),
           Padding(
@@ -94,7 +131,12 @@ class _CICalculatorState extends State<CICalculator> {
             child: TextField(
               controller: _textControllerThree,
               textAlign: TextAlign.center,
-              decoration: const InputDecoration(border: OutlineInputBorder()),
+              decoration: InputDecoration(border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(50)
+              ),
+                hintText: "Enter a value", hintStyle: TextStyle(
+                    color: Colors.grey[400], fontSize: 16),
+              ),
               keyboardType: TextInputType.number,
               style: const TextStyle(fontSize: 18, height: 1),
         
@@ -107,13 +149,16 @@ class _CICalculatorState extends State<CICalculator> {
                 percentageAmount = double.parse(_textControllerTwo.text);
                 amountOfYears = double.parse(_textControllerThree.text);
         
-                var results = CompoundInterestCalculator(initialAmount, percentageAmount, amountOfYears);
-                List<dynamic>? resultsList = results.Calculation();
-                resultsText = resultsList.toString();
+                var results = CompoundInterestCalculator(initialAmount, percentageAmount, amountOfYears, ifMonths);
+                List<String> resultsList = results.calculation();
+                resultsText = resultsList.join();
               });
             },
             height: 50, minWidth: 200,
             color: Colors.amber,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(40),
+            ),
             child: const Text("Calculate",
               style: TextStyle(fontSize: 22),
               ),
